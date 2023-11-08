@@ -551,6 +551,7 @@ int main(int argc, char **argv)
     struct option *longopts;
     char *shortopts;
     stack_t ss;
+    int ret;
 
     longopts = setup_options(&shortopts);
 
@@ -635,8 +636,15 @@ int main(int argc, char **argv)
     arch_init();
 
     if (ismaster) {
-        return master();
+        ret = master();
     } else {
-        return apprentice();
+        ret = apprentice();
     }
+
+    if (ret == EXIT_SUCCESS) {
+        fprintf(stderr, "No mismatches found. Executed %zd instructions.",
+                signal_count);
+    }
+
+    return ret;
 }
